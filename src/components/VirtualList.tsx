@@ -1,5 +1,4 @@
 import React, { useRef } from 'react'
-import React from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 
 type VirtualListProps<T> = {
