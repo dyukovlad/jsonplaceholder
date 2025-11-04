@@ -1,6 +1,8 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import VirtualList from './VirtualList'
-import { usePosts, Post } from '../hooks/usePosts'
+import { usePosts } from '../hooks/usePosts'
+import type { Post } from '../types'
+import styles from './PostsGroupedByUser.module.css'
 
 const PostsGroupedByUser = (): JSX.Element => {
   const { data, isLoading, error, refetch } = usePosts()
@@ -26,11 +28,11 @@ const PostsGroupedByUser = (): JSX.Element => {
     )
 
   return (
-    <div style={{ padding: 16, maxWidth: 980, margin: '0 auto' }}>
-      <h1>Посты по пользователям</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Посты по пользователям</h1>
       {[...grouped.entries()].map(([userId, posts]) => (
-        <section key={userId} style={{ marginBottom: 20 }}>
-          <h2 style={{ margin: '0 0 8px 0' }}>
+        <section key={userId} className={styles.section}>
+          <h2 className={styles.sectionHeader}>
             User ID: {userId} — {posts.length} пост(ов)
           </h2>
 
@@ -39,9 +41,9 @@ const PostsGroupedByUser = (): JSX.Element => {
             height={Math.min(400, posts.length * 88)}
             estimatedItemSize={88}
             renderItem={(post: Post) => (
-              <div>
-                <h4 style={{ margin: 0 }}>{post.title}</h4>
-                <p style={{ margin: '6px 0 0 0', color: '#444' }}>{post.body}</p>
+              <div className={styles.postItem}>
+                <h4 className={styles.postTitle}>{post.title}</h4>
+                <p className={styles.postBody}>{post.body}</p>
               </div>
             )}
           />

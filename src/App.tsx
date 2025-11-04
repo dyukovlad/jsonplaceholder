@@ -1,6 +1,6 @@
-import React from 'react'
 import { Hello } from './components/Hello'
 import { PostsGroupedByUser } from './components/PostsGroupedByUser'
+import { ErrorBoundary } from './components/ErrorBoundary'
 
 const App = (): JSX.Element => {
   return (
@@ -11,7 +11,9 @@ const App = (): JSX.Element => {
 
       <main>
         <Hello name="Мир" />
-        <PostsGroupedByUser />
+        <ErrorBoundary>
+          <PostsGroupedByUser />
+        </ErrorBoundary>
 
         <section>
           <p>

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
+import styles from './VirtualList.module.css'
 
 type VirtualListProps<T> = {
   items: T[]
@@ -29,9 +30,9 @@ export default function VirtualList<T extends { id?: string | number }>({
 
   if (!shouldVirtualize) {
     return (
-      <div style={{ maxHeight: height, overflow: 'auto' }}>
+      <div className={styles.container} style={{ maxHeight: height }}>
         {items.map((item, idx) => (
-          <div key={item.id ?? idx} style={{ padding: 12, borderBottom: '1px solid #eee' }}>
+          <div key={item.id ?? idx} className={styles.regularItem}>
             {renderItem(item, idx)}
           </div>
         ))}
@@ -43,31 +44,16 @@ export default function VirtualList<T extends { id?: string | number }>({
   const totalSize = rowVirtualizer.getTotalSize()
 
   return (
-    <div
-      ref={parentRef}
-      style={{
-        height,
-        overflow: 'auto',
-        width: '100%',
-        borderRadius: 6,
-        border: '1px solid #ddd',
-      }}
-    >
-      <div style={{ height: totalSize, width: '100%', position: 'relative' }}>
+    <div ref={parentRef} className={styles.virtualContainer} style={{ height }}>
+      <div className={styles.virtualInner} style={{ height: totalSize }}>
         {virtualItems.map(virtualRow => {
           const item = items[virtualRow.index]
           return (
             <div
               key={item.id ?? virtualRow.index}
+              className={styles.virtualItem}
               style={{
-                position: 'absolute',
-                transform: `translateY(${virtualRow.start}px)`,
-                top: 0,
-                left: 0,
-                width: '100%',
-                boxSizing: 'border-box',
-                padding: 12,
-                borderBottom: '1px solid #eee',
+                top: `${virtualRow.start}px`,
               }}
             >
               {renderItem(item, virtualRow.index)}

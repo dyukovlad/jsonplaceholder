@@ -1,11 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-
-export type Post = {
-  userId: number
-  id: number
-  title: string
-  body: string
-}
+import type { Post } from '../types'
 
 export type UsePostsOptions = {
   url?: string

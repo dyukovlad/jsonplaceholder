@@ -1,0 +1,32 @@
+.container {
+  padding: 16px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.title {
+  margin: 0 0 16px 0;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.sectionHeader {
+  margin: 0 0 8px 0;
+}
+
+.postItem {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  min-height: 76px; /* 88px - 2*12px padding */
+}
+
+.postTitle {
+  margin: 0 0 6px 0;
+}
+
+.postBody {
+  margin: 0;
+  color: #444;
+}
