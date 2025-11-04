@@ -5,24 +5,23 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 const App = (): JSX.Element => {
   return (
     <div className="app-root">
-      <header>
+      <header role="banner">
         <h1>Витая стартовая аппликация (Vite + React + TypeScript)</h1>
       </header>
 
-      <main>
-        <Hello name="Мир" />
-        <ErrorBoundary>
-          <PostsGroupedByUser />
-        </ErrorBoundary>
+      <Hello name="Мир" />
 
-        <section>
-          <p>
-            <code>Это минимальный шаблон</code>.
-          </p>
-        </section>
-      </main>
+      <ErrorBoundary>
+        <PostsGroupedByUser />
+      </ErrorBoundary>
 
-      <footer>
+      <aside role="complementary" aria-label="Информация о приложении">
+        <p>
+          <code>Это минимальный шаблон</code>.
+        </p>
+      </aside>
+
+      <footer role="contentinfo">
         <small>© {new Date().getFullYear()}</small>
       </footer>
     </div>

@@ -1,11 +1,26 @@
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import VirtualList from './VirtualList'
-import { usePosts } from '../hooks/usePosts'
+import { PostSkeleton } from './PostSkeleton'
+import { usePostsQuery } from '../hooks/usePostsQuery'
 import type { Post } from '../types'
 import styles from './PostsGroupedByUser.module.css'
 
 const PostsGroupedByUser = (): JSX.Element => {
-  const { data, isLoading, error, refetch } = usePosts()
+  const { data, isLoading, error, refetch } = usePostsQuery()
+
+  const handleRetry = useCallback(() => {
+    refetch()
+  }, [refetch])
+
+  const handleRetryKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        handleRetry()
+      }
+    },
+    [handleRetry]
+  )
 
   const grouped = useMemo(() => {
     const map = new Map<number, Post[]>()
@@ -18,38 +33,77 @@ const PostsGroupedByUser = (): JSX.Element => {
     return map
   }, [data])
 
-  if (isLoading) return <div style={{ padding: 16 }}>Загрузка...</div>
+  if (isLoading) {
+    return (
+      <div className={styles.container}>
+        <h1 className={styles.title}>Посты по пользователям</h1>
+        <section className={styles.section}>
+          <h2 className={styles.sectionHeader}>Загрузка...</h2>
+          <div>
+            {Array.from({ length: 5 }, (_, i) => (
+              <PostSkeleton key={i} />
+            ))}
+          </div>
+        </section>
+      </div>
+    )
+  }
   if (error)
     return (
-      <div style={{ padding: 16 }}>
-        <div style={{ color: 'crimson' }}>Ошибка: {String(error)}</div>
-        <button onClick={() => refetch()}>Повторить</button>
-      </div>
+      <main className={styles.container} role="main">
+        <div className={styles.error} role="alert" aria-live="assertive">
+          <h2>Произошла ошибка</h2>
+          <p>{String(error)}</p>
+          <button
+            onClick={handleRetry}
+            onKeyDown={handleRetryKeyDown}
+            className={styles.retryButton}
+            aria-label="Повторить загрузку данных"
+            type="button"
+            tabIndex={0}
+          >
+            Повторить загрузку
+          </button>
+        </div>
+      </main>
     )
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Посты по пользователям</h1>
+    <main className={styles.container} role="main" aria-labelledby="posts-heading">
+      <h1 id="posts-heading" className={styles.title}>
+        Посты по пользователям
+      </h1>
       {[...grouped.entries()].map(([userId, posts]) => (
-        <section key={userId} className={styles.section}>
-          <h2 className={styles.sectionHeader}>
-            User ID: {userId} — {posts.length} пост(ов)
+        <section key={userId} className={styles.section} aria-labelledby={`user-${userId}-heading`}>
+          <h2 id={`user-${userId}-heading`} className={styles.sectionHeader}>
+            Пользователь {userId} — {posts.length} пост
+            {posts.length === 1 ? '' : posts.length < 5 ? 'а' : 'ов'}
           </h2>
 
-          <VirtualList
-            items={posts}
-            height={Math.min(400, posts.length * 88)}
-            estimatedItemSize={88}
-            renderItem={(post: Post) => (
-              <div className={styles.postItem}>
-                <h4 className={styles.postTitle}>{post.title}</h4>
-                <p className={styles.postBody}>{post.body}</p>
-              </div>
-            )}
-          />
+          <div role="list" aria-label={`Посты пользователя ${userId}`}>
+            <VirtualList
+              items={posts}
+              height={Math.min(400, posts.length * 88)}
+              estimatedItemSize={88}
+              renderItem={(post: Post) => (
+                <article
+                  className={styles.postItem}
+                  role="listitem"
+                  aria-labelledby={`post-${post.id}-title`}
+                >
+                  <h3 id={`post-${post.id}-title`} className={styles.postTitle}>
+                    {post.title}
+                  </h3>
+                  <p className={styles.postBody} aria-describedby={`post-${post.id}-title`}>
+                    {post.body}
+                  </p>
+                </article>
+              )}
+            />
+          </div>
         </section>
       ))}
-    </div>
+    </main>
   )
 }
 

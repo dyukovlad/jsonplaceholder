@@ -1,0 +1,17 @@
+.postSkeleton {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  min-height: 76px;
+}
+
+.title {
+  margin-bottom: 8px;
+}
+
+.body {
+  margin-bottom: 4px;
+}
+
+.body:last-child {
+  width: 40%;
+}
