@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { Hello } from '../components/Hello'
+import { Hello } from '../../components/Hello/Hello'
 
 describe('Hello', () => {
   it('renders with default name', () => {

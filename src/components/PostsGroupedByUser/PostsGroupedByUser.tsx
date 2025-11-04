@@ -1,8 +1,8 @@
 import { useMemo, useCallback } from 'react'
-import VirtualList from './VirtualList'
-import { PostSkeleton } from './PostSkeleton'
-import { usePostsQuery } from '../hooks/usePostsQuery'
-import type { Post } from '../types'
+import VirtualList from '../VirtualList/VirtualList'
+import { PostSkeleton } from '../PostSkeleton/PostSkeleton'
+import { usePostsQuery } from '../../hooks/usePostsQuery'
+import type { Post } from '../../types'
 import styles from './PostsGroupedByUser.module.css'
 
 const PostsGroupedByUser = (): JSX.Element => {

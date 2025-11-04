@@ -1,5 +1,5 @@
 import React from 'react'
-import { Skeleton } from './Skeleton'
+import { Skeleton } from '../Skeleton/Skeleton'
 import styles from './PostSkeleton.module.css'
 
 const PostSkeleton: React.FC = () => {

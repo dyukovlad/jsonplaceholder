@@ -1,6 +1,6 @@
-import { Hello } from './components/Hello'
-import { PostsGroupedByUser } from './components/PostsGroupedByUser'
-import { ErrorBoundary } from './components/ErrorBoundary'
+import { Hello } from './components/Hello/Hello'
+import { PostsGroupedByUser } from './components/PostsGroupedByUser/PostsGroupedByUser'
+import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary'
 
 const App = (): JSX.Element => {
   return (
