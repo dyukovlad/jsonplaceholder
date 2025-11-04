@@ -79,7 +79,7 @@ export function usePosts(opts?: UsePostsOptions) {
         return cacheEntry.data
       }
 
-      let lastErr: any = null
+      let lastErr: unknown = null
       for (let i = 0; i <= attempts; i++) {
         if (!mountedRef.current) throw new Error('Component unmounted')
         const controller = new AbortController()
@@ -88,9 +88,12 @@ export function usePosts(opts?: UsePostsOptions) {
           const data = await fetchOnce(controller.signal)
           inMemoryCache[url] = { ts: Date.now(), data }
           return data
-        } catch (err: any) {
+        } catch (err: unknown) {
           lastErr = err
-          if (err && (err.name === 'AbortError' || err.message === 'Component unmounted')) {
+          if (
+            err instanceof Error &&
+            (err.name === 'AbortError' || err.message === 'Component unmounted')
+          ) {
             throw err
           }
           const backoff = 200 * Math.pow(2, i)
@@ -115,12 +118,17 @@ export function usePosts(opts?: UsePostsOptions) {
         lastFetchedAt: Date.now(),
       })
       return data
-    } catch (err: any) {
-      if (err.name === 'AbortError') {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') {
         return
       }
       if (!mountedRef.current) return
-      setState(s => ({ ...s, error: err, isLoading: false, isFetching: false }))
+      setState(s => ({
+        ...s,
+        error: err instanceof Error ? err : new Error(String(err)),
+        isLoading: false,
+        isFetching: false,
+      }))
       throw err
     }
   }, [fetchWithRetry])

@@ -1,4 +1,5 @@
-import React, { useRef, useMemo } from 'react'
+import React, { useRef } from 'react'
+import React from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 
 type VirtualListProps<T> = {
@@ -9,7 +10,7 @@ type VirtualListProps<T> = {
   enableVirtualization?: boolean
 }
 
-export default function VirtualList<T extends any>({
+export default function VirtualList<T extends { id?: string | number }>({
   items,
   height = 400,
   estimatedItemSize = 88,
@@ -31,10 +32,7 @@ export default function VirtualList<T extends any>({
     return (
       <div style={{ maxHeight: height, overflow: 'auto' }}>
         {items.map((item, idx) => (
-          <div
-            key={(item as any).id ?? idx}
-            style={{ padding: 12, borderBottom: '1px solid #eee' }}
-          >
+          <div key={item.id ?? idx} style={{ padding: 12, borderBottom: '1px solid #eee' }}>
             {renderItem(item, idx)}
           </div>
         ))}
@@ -61,7 +59,7 @@ export default function VirtualList<T extends any>({
           const item = items[virtualRow.index]
           return (
             <div
-              key={(item as any).id ?? virtualRow.index}
+              key={item.id ?? virtualRow.index}
               style={{
                 position: 'absolute',
                 transform: `translateY(${virtualRow.start}px)`,

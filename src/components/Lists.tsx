@@ -26,9 +26,9 @@ const Lists = (): JSX.Element => {
         if (!res.ok) throw new Error(`HTTP error: ${res.status}`)
         const data: Post[] = await res.json()
         setPosts(data)
-      } catch (err: any) {
-        if (err.name === 'AbortError') return
-        setError(err.message ?? 'Unknown error')
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name === 'AbortError') return
+        setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
         setLoading(false)
       }
