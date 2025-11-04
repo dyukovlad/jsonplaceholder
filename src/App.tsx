@@ -1,6 +1,5 @@
 import React from 'react'
 import { Hello } from './components/Hello'
-// import { Lists } from './components/Lists'
 import { PostsGroupedByUser } from './components/PostsGroupedByUser'
 
 const App = (): JSX.Element => {
@@ -13,7 +12,6 @@ const App = (): JSX.Element => {
       <main>
         <Hello name="Мир" />
         <PostsGroupedByUser />
-        {/* <Lists /> */}
 
         <section>
           <p>

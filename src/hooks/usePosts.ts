@@ -11,7 +11,7 @@ export type UsePostsOptions = {
   url?: string
   retry?: number
   timeoutMs?: number
-  cacheTTL?: number // ms
+  cacheTTL?: number
 }
 
 type State = {
@@ -26,10 +26,9 @@ const DEFAULTS: Required<UsePostsOptions> = {
   url: 'https://jsonplaceholder.typicode.com/posts',
   retry: 2,
   timeoutMs: 15_000,
-  cacheTTL: 60_000, // 1 minute
+  cacheTTL: 60_000,
 }
 
-// very small in-memory cache — fine for SPA; swap to persistent cache or TanStack Query later
 const inMemoryCache: { [key: string]: { ts: number; data: Post[] } } = {}
 
 export function usePosts(opts?: UsePostsOptions) {
@@ -56,7 +55,7 @@ export function usePosts(opts?: UsePostsOptions) {
   const fetchOnce = useCallback(
     async (signal: AbortSignal) => {
       const controller = new AbortController()
-      const mergedSignal = signal // caller may pass external; normally we'll use controller.signal
+      const mergedSignal = signal
       const timer = setTimeout(() => controller.abort(), timeoutMs)
 
       try {
@@ -74,7 +73,6 @@ export function usePosts(opts?: UsePostsOptions) {
 
   const fetchWithRetry = useCallback(
     async (attempts = retry) => {
-      // Check cache
       const cacheEntry = inMemoryCache[url]
       const now = Date.now()
       if (cacheEntry && now - cacheEntry.ts < cacheTTL) {
@@ -88,16 +86,13 @@ export function usePosts(opts?: UsePostsOptions) {
         abortRef.current = controller
         try {
           const data = await fetchOnce(controller.signal)
-          // cache it
           inMemoryCache[url] = { ts: Date.now(), data }
           return data
         } catch (err: any) {
           lastErr = err
-          // if aborted — bubble up immediately
           if (err && (err.name === 'AbortError' || err.message === 'Component unmounted')) {
             throw err
           }
-          // otherwise retry with backoff
           const backoff = 200 * Math.pow(2, i)
           await new Promise(r => setTimeout(r, backoff))
         }
@@ -122,7 +117,6 @@ export function usePosts(opts?: UsePostsOptions) {
       return data
     } catch (err: any) {
       if (err.name === 'AbortError') {
-        // don't set error on user-initiated abort
         return
       }
       if (!mountedRef.current) return

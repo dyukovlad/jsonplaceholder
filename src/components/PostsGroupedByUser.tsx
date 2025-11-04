@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import VirtualList from './VirtualList'
-import { usePosts, Post } from '../hooks/usePosts' // предполагаем, что такой хук есть
+import { usePosts, Post } from '../hooks/usePosts'
 
 const PostsGroupedByUser = (): JSX.Element => {
   const { data, isLoading, error, refetch } = usePosts()

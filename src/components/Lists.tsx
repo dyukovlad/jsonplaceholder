@@ -27,7 +27,7 @@ const Lists = (): JSX.Element => {
         const data: Post[] = await res.json()
         setPosts(data)
       } catch (err: any) {
-        if (err.name === 'AbortError') return // отмена — нормально
+        if (err.name === 'AbortError') return
         setError(err.message ?? 'Unknown error')
       } finally {
         setLoading(false)
@@ -41,7 +41,6 @@ const Lists = (): JSX.Element => {
     }
   }, [])
 
-  // Группируем по userId
   const grouped: GroupedPosts = posts.reduce((acc, post) => {
     const key = post.userId
     if (!acc[key]) acc[key] = []
